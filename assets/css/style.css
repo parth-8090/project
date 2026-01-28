@@ -1,0 +1,594 @@
+/* ============================================
+   AGORA CAMPUS - MODERN SLATE THEME (REBUILT)
+   Light & Dark Theme Support
+   ============================================ */
+
+@import url('ultimate.css');
+
+/* ============================================
+   CSS VARIABLES - LIGHT THEME (DEFAULT)
+   ============================================ */
+:root {
+  /* Primary Colors - Indigo/Violet */
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary-color: #ec4899;
+  --accent-color: #8b5cf6;
+  
+  /* Light Theme Palette */
+  --bg-color: #f3f4f6;
+  --bg-secondary: #e5e7eb;
+  --text-color: #111827;
+  --text-muted: #4b5563;
+  --border-color: #d1d5db;
+  
+  /* Component Colors */
+  --card-bg: #ffffff;
+  --input-bg: #f9fafb;
+  --navbar-bg: #ffffff;
+  --navbar-text: #1f2937;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Spacing & Sizing */
+  --border-radius: 0.75rem;
+  --border-radius-lg: 1rem;
+  --border-radius-sm: 0.5rem;
+  
+  /* Transitions */
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Utility foregrounds */
+  --on-primary: #ffffff;
+  --on-surface: #ffffff;
+  --primary-gradient-end: #4338ca;
+  
+  /* Bootstrap Overrides */
+  --bs-primary: var(--primary-color);
+  --bs-body-bg: var(--bg-color);
+  --bs-body-color: var(--text-color);
+  --bs-card-bg: var(--card-bg);
+  --bs-border-color: var(--border-color);
+}
+
+/* ============================================
+   CSS VARIABLES - DARK THEME
+   ============================================ */
+html[data-theme="dark"],
+body.dark-theme {
+  /* Dark Theme Palette */
+  --bg-color: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-color: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border-color: #334155;
+  
+  --card-bg: #1e293b;
+  --input-bg: #334155;
+  --navbar-bg: #1e293b;
+  --navbar-text: #f3f4f6;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   GLOBAL STYLES & SCROLLBAR
+   ============================================ */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  scrollbar-width: avone; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: var(--navbar-bg); /* Use theme variable */
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  padding: 0.75rem 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .navbar {
+  background-color: var(--navbar-bg); /* Ensure dark theme uses variable */
+  border-bottom-color: var(--border-color);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-color) !important;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+  color: var(--navbar-text) !important;
+  font-weight: 500;
+  transition: var(--transition);
+  margin: 0 0.25rem;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem !important;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary-color) !important;
+  background-color: var(--bg-secondary);
+}
+
+.dropdown-menu {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dropdown-item {
+  color: var(--text-color) !important;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-secondary) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  transition: var(--transition);
+  background-color: var(--bg-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.theme-toggle:hover {
+  background-color: var(--primary-color);
+  color: white !important;
+  border-color: var(--primary-color);
+  transform: rotate(15deg);
+}
+
+/* ============================================
+   ICONS & THEMING
+   ============================================ */
+/* Default Light Theme Icons */
+.fas, .far, .fab {
+    color: var(--primary-color);
+}
+
+/* Specific overrides for text-muted contexts */
+.text-muted .fas, .text-muted .far, .text-muted .fab {
+    color: inherit;
+}
+
+/* Specific overrides for buttons */
+.btn-primary .fas, .btn-primary .far, .btn-primary .fab {
+    color: white;
+}
+
+/* Dark Theme Icon Adjustments */
+[data-theme="dark"] .fas, 
+[data-theme="dark"] .far, 
+[data-theme="dark"] .fab {
+    /* Slightly brighter icons in dark mode for better contrast */
+    filter: brightness(1.2);
+}
+
+/* Navbar Toggler Icon - Already handled but ensuring sync */
+html[data-theme="dark"] .navbar-toggler-icon {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Empty State Icons */
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--text-muted);
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+}
+
+/* Feature Icons */
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    background-color: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .feature-icon {
+    background-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Stat Icons */
+.stat-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .stat-icon {
+    background-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Navbar Toggler */
+.navbar-toggler {
+  border-color: var(--border-color);
+  color: var(--navbar-text);
+  padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ============================================
+   COMPONENTS
+   ============================================ */
+
+/* Buttons */
+.btn {
+  border-radius: 50rem; /* Pill shape */
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Cards */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Inputs */
+.form-control {
+  background-color: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  background-color: var(--card-bg);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.15);
+  color: var(--text-color);
+}
+
+/* Badges */
+.badge {
+  font-weight: 600;
+  padding: 0.5em 0.8em;
+}
+
+/* Auth Layout */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* ============================================
+   UTILITIES & ANIMATIONS
+   ============================================ */
+
+/* Hero Title */
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Hover Lift */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Text Gradient */
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.avatar-circle.sm { width: 32px; height: 32px; font-size: 0.875rem; }
+.avatar-circle.lg { width: 64px; height: 64px; font-size: 1.5rem; }
+.avatar-circle.xl { width: 96px; height: 96px; font-size: 2.5rem; }
+
+/* Page Title */
+.page-title {
+    position: relative;
+    display: inline-block;
+}
+
+/* Badge Subtle Variants */
+.bg-primary-subtle { background-color: rgba(99, 102, 241, 0.1) !important; color: var(--primary-color) !important; }
+.bg-success-subtle { background-color: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; }
+.bg-warning-subtle { background-color: rgba(245, 158, 11, 0.1) !important; color: #f59e0b !important; }
+.bg-danger-subtle { background-color: rgba(239, 68, 68, 0.1) !important; color: #ef4444 !important; }
+.bg-info-subtle { background-color: rgba(6, 182, 212, 0.1) !important; color: #06b6d4 !important; }
+.bg-secondary-subtle { background-color: var(--bg-secondary) !important; color: var(--text-muted) !important; }
+.bg-light-subtle { background-color: #f8f9fa !important; color: var(--text-muted) !important; }
+.bg-dark-subtle { background-color: rgba(33, 37, 41, 0.1) !important; color: var(--text-color) !important; }
+
+[data-theme="dark"] .bg-light-subtle { background-color: rgba(255, 255, 255, 0.05) !important; color: var(--text-muted) !important; }
+[data-theme="dark"] .bg-dark-subtle { background-color: rgba(0, 0, 0, 0.3) !important; color: var(--text-muted) !important; }
+
+/* Line Clamp Utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px dashed var(--border-color);
+}
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--text-muted);
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+}
+
+/* Dark Mode Overrides for Bootstrap Utilities */
+[data-theme="dark"] .bg-light { background-color: var(--bg-secondary) !important; }
+[data-theme="dark"] .bg-white { background-color: var(--card-bg) !important; }
+[data-theme="dark"] .text-dark { color: var(--text-color) !important; }
+[data-theme="dark"] .border { border-color: var(--border-color) !important; }
+[data-theme="dark"] .text-muted { color: #94a3b8 !important; }
+[data-theme="dark"] .table { color: var(--text-color); border-color: var(--border-color); }
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: transparent;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+/* ============================================
+   MOBILE RESPONSIVENESS & TOUCH OPTIMIZATIONS
+   ============================================ */
+@media (max-width: 768px) {
+    /* Container Padding */
+    .container, .container-fluid {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Typography */
+    html {
+        font-size: 15px; /* Slightly smaller base font for mobile to fit more content */
+    }
+    
+    h1, .h1 { font-size: 2rem !important; }
+    h2, .h2 { font-size: 1.75rem !important; }
+    h3, .h3 { font-size: 1.5rem !important; }
+    
+    /* Navbar */
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    /* Touch Targets */
+    .btn, .nav-link, .dropdown-item, .page-link {
+        min-height: 44px; /* Apple Human Interface Guidelines */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Cards */
+    .card {
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    /* Spacing */
+    .py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+    .mb-5 { margin-bottom: 2rem !important; }
+    .gap-4 { gap: 1rem !important; }
+    
+    /* Grid */
+    .row {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+    .col, [class*="col-"] {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    /* Mobile Navigation */
+    .navbar-collapse {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
+    }
+}
