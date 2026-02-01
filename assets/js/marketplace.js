@@ -1,14 +1,16 @@
 // Marketplace JavaScript with GSAP animations
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Animate marketplace cards
-    gsap.from('.marketplace-card', {
-        duration: 0.6,
-        y: 50,
-        opacity: 0,
-        stagger: 0.05,
-        ease: 'power3.out'
-    });
+    // Animate marketplace cards if they exist
+    if (document.querySelectorAll('.marketplace-card').length > 0) {
+        gsap.from('.marketplace-card', {
+            duration: 0.6,
+            y: 50,
+            opacity: 0,
+            stagger: 0.05,
+            ease: 'power3.out'
+        });
+    }
     
     // Sell item form
     const sellForm = document.getElementById('sellItemForm');
@@ -44,10 +46,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.closest('.contact-seller-btn')) {
             const btn = e.target.closest('.contact-seller-btn');
             const itemId = btn.dataset.itemId;
-            const sellerName = btn.dataset.sellerName;
             contactSeller(itemId, sellerName);
         }
     });
+
+    // Inquiries button
+    const btnInquiries = document.getElementById('btnInquiries');
+    if (btnInquiries) {
+        btnInquiries.addEventListener('click', function() {
+            loadInquiries();
+        });
+    }
 });
 
 function handleSellItem() {
@@ -64,7 +73,14 @@ function handleSellItem() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.text().then(text => {
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Server output:', text);
+            throw new Error('Server returned invalid JSON. Check console for details.');
+        }
+    }))
     .then(data => {
         if (data.success) {
             Swal.fire({
@@ -100,6 +116,17 @@ function handleSellItem() {
 }
 
 function contactSeller(itemId, sellerName) {
+    // We need to get the seller ID somehow. Ideally passed as arg or on the button.
+    // The button click handler passed itemId and sellerName.
+    // Let's find the button to get the seller ID
+    const btn = document.querySelector(`.contact-seller-btn[data-item-id="${itemId}"]`);
+    const sellerId = btn ? btn.dataset.sellerId : null;
+
+    if (!sellerId) {
+        Swal.fire('Error', 'Could not identify seller.', 'error');
+        return;
+    }
+
     Swal.fire({
         title: `Contact ${sellerName}`,
         html: `
@@ -127,20 +154,90 @@ function contactSeller(itemId, sellerName) {
                 return false;
             }
             
-            return { subject, content };
+            // Combine subject and content or just use content
+            const fullMessage = `Subject: ${subject}\n\n${content}`;
+            
+            return { message: fullMessage };
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            // Here you would typically send an API request
-            // For now we'll simulate success
-            Swal.fire({
-                icon: 'success',
-                title: 'Message Sent!',
-                text: `Your message has been sent to ${sellerName}.`,
-                timer: 2000,
-                showConfirmButton: false
+            const formData = new FormData();
+            formData.append('action', 'send_inquiry');
+            formData.append('item_id', itemId);
+            formData.append('receiver_id', sellerId);
+            formData.append('message', result.value.message);
+
+            fetch('api/marketplace.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Message Sent!',
+                        text: `Your message has been sent to ${sellerName}.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                Swal.fire('Error', 'Failed to send message.', 'error');
             });
         }
+    });
+}
+
+function loadInquiries() {
+    const listContainer = document.getElementById('inquiriesList');
+    listContainer.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>';
+
+    const formData = new FormData();
+    formData.append('action', 'get_inquiries');
+
+    fetch('api/marketplace.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.inquiries.length > 0) {
+            let html = '';
+            data.inquiries.forEach(inquiry => {
+                html += `
+                    <div class="list-group-item list-group-item-action p-3 border-bottom">
+                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0 fw-bold text-primary">${inquiry.item_title || 'Item Inquiry'}</h6>
+                            <small class="text-muted">${new Date(inquiry.created_at).toLocaleDateString()}</small>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                             <div class="avatar-circle sm bg-secondary-subtle text-secondary me-2" style="width: 24px; height: 24px; font-size: 10px;">
+                                ${inquiry.sender_name ? inquiry.sender_name.charAt(0).toUpperCase() : '?'}
+                            </div>
+                            <small class="fw-semibold text-dark">${inquiry.sender_name || 'Unknown User'}</small>
+                        </div>
+                        <p class="mb-1 text-muted small" style="white-space: pre-wrap;">${inquiry.message}</p>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        } else {
+            listContainer.innerHTML = `
+                <div class="text-center py-5 text-muted">
+                    <div class="mb-3"><i class="fas fa-inbox fa-3x opacity-25"></i></div>
+                    <p class="mb-0">No inquiries yet.</p>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        listContainer.innerHTML = '<div class="text-center py-3 text-danger">Failed to load inquiries.</div>';
     });
 }
 

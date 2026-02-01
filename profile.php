@@ -48,9 +48,15 @@ include 'includes/header.php';
                     <div class="bg-primary bg-opacity-10 p-4 text-center pb-5">
                         <div class="position-relative d-inline-block mb-3">
                             <div class="rounded-circle bg-white p-1 shadow-sm">
-                                <div class="profile-badge mx-auto">
-                                    <i class="fas fa-user"></i>
-                                </div>
+                                <?php if (!empty($student['profile_photo']) && file_exists(UPLOAD_DIR . 'profiles/' . $student['profile_photo'])): ?>
+                                    <div class="rounded-circle overflow-hidden mx-auto shadow-sm" style="width: 100px; height: 100px;">
+                                        <img src="uploads/profiles/<?php echo htmlspecialchars($student['profile_photo']); ?>" alt="Profile file" class="w-100 h-100 object-fit-cover">
+                                    </div>
+                                <?php else: ?>
+                                    <div class="profile-badge mx-auto">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="position-absolute bottom-0 end-0">
                                 <button class="btn btn-sm btn-light rounded-circle shadow-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal" title="Edit Profile">
@@ -316,6 +322,36 @@ include 'includes/header.php';
             </div>
             <form id="editProfileForm">
                 <div class="modal-body">
+                    <h6 class="fw-bold text-muted text-uppercase small mb-3">Personal Details</h6>
+                    <div class="mb-3 text-center">
+                        <div class="position-relative d-inline-block mb-2">
+                             <?php if (!empty($student['profile_photo']) && file_exists(UPLOAD_DIR . 'profiles/' . $student['profile_photo'])): ?>
+                                <img src="uploads/profiles/<?php echo htmlspecialchars($student['profile_photo']); ?>" class="rounded-circle shadow-sm object-fit-cover" style="width: 80px; height: 80px;" id="photoPreview">
+                            <?php else: ?>
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 80px; height: 80px; font-size: 2rem;" id="photoPreviewDiv">
+                                    <i class="fas fa-user text-secondary"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="small mb-3">
+                            <input type="file" class="form-control form-control-sm" name="profile_photo" accept="image/jpeg,image/png,image/gif" id="profilePhotoInput">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" value="<?php echo htmlspecialchars($student['full_name']); ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Email Address</label>
+                        <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($student['email']); ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Date of Birth</label>
+                        <input type="date" class="form-control" name="birthdate" value="<?php echo htmlspecialchars($student['birthdate']); ?>" required>
+                    </div>
+                    
+                    <h6 class="fw-bold text-muted text-uppercase small mb-3 mt-4">Social & Skills</h6>
                     <div class="mb-3">
                         <label class="form-label fw-medium">LinkedIn Profile</label>
                         <div class="input-group">
@@ -349,5 +385,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/profile.js"></script>
+<script src="assets/js/profile.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

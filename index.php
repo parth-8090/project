@@ -15,11 +15,11 @@ require_once 'includes/header.php';
             <div class="col-lg-6" data-aos="fade-right">
                 <h1 class="hero-title">Your Complete Campus Community Platform</h1>
                 <p class="hero-subtitle">Connect, collaborate, and thrive with Agora Campus. The all-in-one solution for students to manage academic and social life.</p>
-                <div class="d-flex gap-3">
-                    <a href="login.php" class="btn btn-primary btn-lg">
+                <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                    <a href="login.php" class="btn btn-primary btn-lg px-4">
                         <i class="fas fa-sign-in-alt me-2"></i> Login
                     </a>
-                    <a href="register.php" class="btn btn-outline-primary btn-lg">
+                    <a href="register.php" class="btn btn-outline-primary btn-lg px-4">
                         <i class="fas fa-user-plus me-2"></i> Register
                     </a>
                 </div>

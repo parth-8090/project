@@ -2,7 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize animations
-    initializeAnimations();
+    // initializeAnimations(); // Animation disabled for stability
+    console.log("Business JS Initialized");
     
     // Initialize counters
     initializeCounters();
@@ -27,23 +28,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeAnimations() {
-    // Animate page load
-    gsap.from('.stat-card', {
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        stagger: 0.1,
-        ease: 'power3.out'
-    });
+    // Animate stat cards only if they exist
+    const statCards = document.querySelectorAll('.stat-card');
+    if (statCards.length > 0) {
+        gsap.fromTo(statCards, 
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
+        );
+    }
     
-    gsap.from('.card', {
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        stagger: 0.1,
-        delay: 0.2,
-        ease: 'power3.out'
-    });
+    // Animate Job Cards specific class - prevents conflicts
+    const jobCards = document.querySelectorAll('.job-card-animate');
+    if (jobCards.length > 0) {
+        gsap.set(jobCards, { opacity: 0, y: 30 }); // Set initial state
+        
+        gsap.to(jobCards, {
+            duration: 0.6,
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            ease: 'back.out(1.2)',
+            delay: 0.1,
+            clearProps: 'opacity,transform' // Ensure clean state after animation
+        });
+    }
 }
 
 function initializeCounters() {
@@ -91,7 +99,7 @@ function handlePostJob() {
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                window.location.href = 'business_dashboard.php';
+                window.location.href = 'business_jobs.php';
             });
         } else {
             Swal.fire({
@@ -218,7 +226,7 @@ function handleSubmitReview() {
 }
 
 function toggleJobStatus(jobId, currentStatus) {
-    const newStatus = currentStatus === 'active' ? 'closed' : 'active';
+    const newStatus = currentStatus === 'active' ? 'completed' : 'active';
     const actionText = newStatus === 'active' ? 'activate' : 'close';
     const confirmColor = newStatus === 'active' ? '#198754' : '#6c757d';
     

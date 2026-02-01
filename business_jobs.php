@@ -10,7 +10,7 @@ $stmt = $conn->prepare("
     SELECT j.*, 
            (SELECT COUNT(*) FROM applications WHERE job_id = j.id) as application_count
     FROM jobs j
-    WHERE j.business_id = ?
+    WHERE j.business_id = ? AND j.status = 'active'
     ORDER BY j.posted_at DESC
 ");
 $stmt->execute([$business_id]);
@@ -30,10 +30,14 @@ include 'includes/header.php';
             <i class="fas fa-plus me-2"></i>Post New Job
         </a>
     </div>
-    
+
+    <!-- Success/Error Alerts -->
+    <div id="successAlert" class="alert alert-success border-0 shadow-sm mb-4" style="display: none;"></div>
+    <div id="errorAlert" class="alert alert-danger border-0 shadow-sm mb-4" style="display: none;"></div>
+
     <div class="row g-4">
         <?php if (empty($jobs)): ?>
-            <div class="col-12" data-aos="fade-up">
+            <div class="col-12">
                 <div class="card border-0 shadow-sm text-center p-5">
                     <div class="card-body">
                         <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
@@ -47,82 +51,87 @@ include 'includes/header.php';
             </div>
         <?php else: ?>
             <div class="col-12">
-                <!-- Success/Error Alerts -->
-                <div id="successAlert" class="alert alert-success border-0 shadow-sm mb-4" style="display: none;"></div>
-                <div id="errorAlert" class="alert alert-danger border-0 shadow-sm mb-4" style="display: none;"></div>
-
                 <?php foreach ($jobs as $index => $job): ?>
-                <div class="card border-0 shadow-sm mb-3 overflow-hidden transition-hover" data-aos="fade-up" data-aos-delay="<?php echo min($index * 50, 500); ?>">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-lg-8">
-                                <div class="d-flex align-items-center mb-2">
-                                    <h4 class="fw-bold mb-0 me-3"><?php echo htmlspecialchars($job['title']); ?></h4>
-                                    <?php 
-                                    $statusClass = match($job['status']) {
-                                        'active' => 'success',
-                                        'closed' => 'secondary',
-                                        default => 'warning'
-                                    };
-                                    ?>
-                                    <span class="badge bg-<?php echo $statusClass; ?>-subtle text-<?php echo $statusClass; ?> rounded-pill border border-<?php echo $statusClass; ?>-subtle px-3">
-                                        <?php echo ucfirst($job['status']); ?>
+                <article class="job-card horizontal mb-4">
+                    <div class="job-card-body">
+                        <!-- Main Content -->
+                        <div class="job-main-content">
+                            <header class="job-header mb-2 justify-content-start align-items-center">
+                                <h2 class="job-title fs-4 mb-0 me-3">
+                                    <?php echo htmlspecialchars($job['title']); ?>
+                                </h2>
+                                <?php 
+                                $statusClass = match($job['status']) {
+                                    'active' => 'success',
+                                    'completed' => 'secondary',
+                                    default => 'warning'
+                                };
+                                ?>
+                                <span class="badge bg-<?php echo $statusClass; ?>-subtle text-<?php echo $statusClass; ?> rounded-pill border border-<?php echo $statusClass; ?>-subtle px-3">
+                                    <?php echo ucfirst($job['status']); ?>
+                                </span>
+                            </header>
+                            
+                            <div class="job-meta-tags mb-3">
+                                <span class="job-tag">
+                                    <i class="fas fa-briefcase"></i> <?php echo htmlspecialchars($job['job_type']); ?>
+                                </span>
+                                <span class="job-tag">
+                                    <i class="fas fa-clock"></i> <?php echo htmlspecialchars($job['period']); ?>
+                                </span>
+                                <span class="job-tag">
+                                    <i class="fas fa-calendar"></i> Posted: <?php echo formatDate($job['posted_at']); ?>
+                                </span>
+                                <?php if ($job['number_of_employees'] > 0): ?>
+                                    <span class="job-tag tag-openings">
+                                        <i class="fas fa-users"></i> Openings: <?php echo $job['number_of_employees']; ?>
                                     </span>
-                                </div>
-                                
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <span class="badge bg-light text-muted border fw-normal">
-                                        <i class="fas fa-briefcase me-1"></i> <?php echo htmlspecialchars($job['job_type']); ?>
-                                    </span>
-                                    <span class="badge bg-light text-muted border fw-normal">
-                                        <i class="fas fa-clock me-1"></i> <?php echo htmlspecialchars($job['period']); ?>
-                                    </span>
-                                    <span class="badge bg-light text-muted border fw-normal">
-                                        <i class="fas fa-calendar me-1"></i> Posted: <?php echo formatDate($job['posted_at']); ?>
-                                    </span>
-                                </div>
-                                
-                                <p class="text-muted mb-3"><?php echo htmlspecialchars(substr($job['description'], 0, 200)) . (strlen($job['description']) > 200 ? '...' : ''); ?></p>
-                                
-                                <div class="d-flex align-items-center text-muted small">
-                                    <i class="fas fa-tools me-2 text-primary"></i>
-                                    <span class="fw-medium">Required Skills:</span>
-                                    <span class="ms-2"><?php echo htmlspecialchars($job['required_skills']); ?></span>
-                                </div>
+                                <?php endif; ?>
                             </div>
                             
-                            <div class="col-lg-4 mt-4 mt-lg-0">
-                                <div class="bg-light rounded-3 p-3 text-center mb-3 border">
-                                    <h3 class="fw-bold text-primary mb-0"><?php echo $job['application_count']; ?></h3>
-                                    <div class="text-muted small text-uppercase fw-bold">Applications</div>
-                                </div>
+                            <p class="job-description mb-3">
+                                <?php echo htmlspecialchars(substr($job['description'], 0, 200)) . (strlen($job['description']) > 200 ? '...' : ''); ?>
+                            </p>
+                            
+                            <div class="d-flex align-items-center text-muted small">
+                                <i class="fas fa-tools me-2 text-primary"></i>
+                                <span class="fw-medium">Required Skills:</span>
+                                <span class="ms-2"><?php echo htmlspecialchars($job['required_skills']); ?></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Sidebar Actions -->
+                        <div class="job-sidebar">
+                            <div class="job-audit-box">
+                                <div class="job-audit-number"><?php echo $job['application_count']; ?></div>
+                                <div class="job-audit-label">Applications</div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="business_applications.php?job_id=<?php echo $job['id']; ?>" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-users me-2"></i> View Apps
+                                </a>
                                 
-                                <div class="d-grid gap-2">
-                                    <a href="business_applications.php?job_id=<?php echo $job['id']; ?>" class="btn btn-outline-primary">
-                                        <i class="fas fa-users me-2"></i> View Applications
-                                    </a>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-<?php echo $job['status'] === 'active' ? 'secondary' : 'success'; ?> btn-sm flex-grow-1" 
+                                            onclick="toggleJobStatus(<?php echo $job['id']; ?>, '<?php echo $job['status']; ?>')">
+                                        <i class="fas fa-<?php echo $job['status'] === 'active' ? 'lock' : 'lock-open'; ?> me-2"></i> 
+                                        <?php echo $job['status'] === 'active' ? 'Close' : 'Reopen'; ?>
+                                    </button>
                                     
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-outline-<?php echo $job['status'] === 'active' ? 'secondary' : 'success'; ?> flex-grow-1" 
-                                                onclick="toggleJobStatus(<?php echo $job['id']; ?>, '<?php echo $job['status']; ?>')">
-                                            <i class="fas fa-<?php echo $job['status'] === 'active' ? 'lock' : 'lock-open'; ?> me-2"></i> 
-                                            <?php echo $job['status'] === 'active' ? 'Close' : 'Reopen'; ?>
-                                        </button>
-                                        
-                                        <button class="btn btn-outline-danger" onclick="deleteJob(<?php echo $job['id']; ?>)" title="Delete Job">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteJob(<?php echo $job['id']; ?>)" title="Delete Job">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </article>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </div>
 </div>
 
-<script src="assets/js/business.js"></script>
+<script src="assets/js/business.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

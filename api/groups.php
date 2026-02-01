@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/config.php';
 
 header('Content-Type: application/json');
+ini_set('display_errors', 0);
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
@@ -16,9 +17,9 @@ try {
         case 'create_group':
             requireStudent();
             $student_id = $_SESSION['user_id'];
-            $group_name = sanitizeInput($_POST['group_name']);
+            $group_name = sanitizeInput($_POST['group_name'] ?? '');
             $department = sanitizeInput($_POST['department'] ?? '');
-            $description = sanitizeInput($_POST['description']);
+            $description = sanitizeInput($_POST['description'] ?? '');
             
             if (empty($group_name) || empty($description)) {
                  echo json_encode(['success' => false, 'message' => 'Name and description are required']);
@@ -49,9 +50,9 @@ try {
             requireStudent();
             $student_id = $_SESSION['user_id'];
             $group_id = intval($_POST['group_id']);
-            $group_name = sanitizeInput($_POST['group_name']);
+            $group_name = sanitizeInput($_POST['group_name'] ?? '');
             $department = sanitizeInput($_POST['department'] ?? '');
-            $description = sanitizeInput($_POST['description']);
+            $description = sanitizeInput($_POST['description'] ?? '');
             
             // Verify ownership
             $stmt = $conn->prepare("SELECT id FROM groups WHERE id = ? AND created_by = ?");

@@ -113,7 +113,7 @@ include 'includes/header.php';
         </div>
         
         <div class="col-md-4 mb-3" data-aos="zoom-in" data-aos-delay="100">
-            <a href="post_job.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift">
+            <a href="post_job.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift bg-white">
                 <div class="card-body">
                     <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 60px; height: 60px;">
                         <i class="fas fa-plus fa-lg"></i>
@@ -125,7 +125,7 @@ include 'includes/header.php';
         </div>
         
         <div class="col-md-4 mb-3" data-aos="zoom-in" data-aos-delay="200">
-            <a href="business_applications.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift">
+            <a href="business_applications.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift bg-white">
                 <div class="card-body">
                     <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 60px; height: 60px;">
                         <i class="fas fa-list fa-lg"></i>
@@ -137,7 +137,7 @@ include 'includes/header.php';
         </div>
         
         <div class="col-md-4 mb-3" data-aos="zoom-in" data-aos-delay="300">
-            <a href="business_jobs.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift">
+            <a href="business_jobs.php" class="card border-0 shadow-sm h-100 text-decoration-none transition-hover text-center p-4 hover-lift bg-white">
                 <div class="card-body">
                     <div class="bg-purple text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 60px; height: 60px; background-color: #6f42c1;">
                         <i class="fas fa-tasks fa-lg"></i>
@@ -158,7 +158,7 @@ include 'includes/header.php';
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 text-nowrap">
                     <thead class="bg-light">
                         <tr>
                             <th class="ps-4 py-3 text-muted small text-uppercase fw-bold">Student</th>

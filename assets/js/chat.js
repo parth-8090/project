@@ -31,7 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server output:', text);
+                    throw new Error('Server returned invalid JSON. Check console for details.');
+                }
+            }))
             .then(data => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Add Member';
@@ -157,7 +164,14 @@ function sendMessage() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.text().then(text => {
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Server output:', text);
+            throw new Error('Server returned invalid JSON. Check console for details.');
+        }
+    }))
     .then(data => {
         if (data.success) {
             // Clear input and attachment
@@ -217,10 +231,8 @@ function addMessageToChat(messageData, isSent = false) {
     const nameColor = isSent ? 'text-white-50' : 'text-primary';
     const timeColor = isSent ? 'text-white-50' : 'text-muted';
     
-    let nameHtml = '';
-    if (!isSent) {
-        nameHtml = `<div class="fw-bold small mb-1 ${nameColor}">${escapeHtml(messageData.full_name)}</div>`;
-    }
+    // Always show name
+    let nameHtml = `<div class="fw-bold small mb-1 ${nameColor} ${isSent ? 'text-end' : ''}">${escapeHtml(messageData.full_name)}</div>`;
     
     let attachmentHtml = '';
     if (messageData.attachment_url) {

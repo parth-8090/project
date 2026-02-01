@@ -1,114 +1,45 @@
-# Agora Campus - Setup Guide
+# ⚙️ Setup Instructions
 
-## Quick Start
+Follow these steps to set up **Agora Campus** on your local machine using XAMPP.
 
-### Step 1: Database Setup
-1. Open phpMyAdmin or MySQL command line
-2. Create a new database (or use existing MySQL installation)
-3. Import the schema file:
-   ```sql
-   source database/schema.sql
-   ```
-   Or in phpMyAdmin: Import → Select `database/schema.sql` → Go
+## Prerequisites
+- [XAMPP](https://www.apachefriends.org/index.html) (Apache + MySQL + PHP) deployed.
 
-### Step 2: Configure Database
-Edit `config/database.php`:
-```php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');        // Your MySQL username
-define('DB_PASS', '');           // Your MySQL password
-define('DB_NAME', 'p');
-```
+## Installation
 
-### Step 3: Create Upload Directories
-The application will automatically create these, but you can create them manually:
+### 1. Clone the Repository
+Move the project folder to your XAMPP `htdocs` directory.
+Assuming your project folder is named `project`:
 ```bash
-mkdir -p uploads/notes
-mkdir -p uploads/marketplace
-chmod -R 777 uploads/
+C:\xampp\htdocs\project\
 ```
 
-### Step 4: Start the Server
+### 2. Database Setup
+1. Open **phpMyAdmin** (usually at `http://localhost/phpmyadmin`).
+2. Create a new database named **`p`**.
+   > *Note: If you want to use a different database name, update `config/database.php`.*
+3. Select the `p` database.
+4. Go to the **Import** tab.
+5. Choose and import the schema file:
+   `database/schema.sql`
+6. (Optional) To populate with sample data, import:
+   `database/dummy_data.sql`
 
-**Option A: PHP Built-in Server (Development)**
-```bash
-php -S localhost:8000
-```
-Then open: http://localhost:8000
+### 3. Configuration
+The database connection is defined in `config/database.php`. The default settings for XAMPP are:
+- **Host**: `localhost`
+- **User**: `root`
+- **Password**: *(empty)*
+- **Database**: `p`
 
-**Option B: Apache/Nginx**
-- Place project in web root (e.g., `/var/www/html/agora_campus` or `C:\xampp\htdocs\agora_campus`)
-- Access via: http://localhost/agora_campus
+If your local setup differs, please update this file.
 
-### Step 5: First Use
-1. Open the application in your browser
-2. Click "Register" to create an account
-3. Choose "Student" or "Business" registration
-4. Fill in the required information
-5. Login and start using the platform!
+### 4. File Permissions (Optional)
+Ensure the `uploads/` directory and its subdirectories are writable so that users can upload profile pictures and documents.
 
-## Sample Data (Optional)
+### 5. Run the Application
+Open your browser and navigate to:
+[http://localhost/project](http://localhost/project)
 
-You can insert sample data for testing:
-
-```sql
--- Sample Group
-INSERT INTO groups (group_name, department, description) 
-VALUES ('Computer Science 2024', 'Computer Science', 'Group for CS students');
-
--- Sample Event
-INSERT INTO events (title, description, event_type, event_date, event_time, venue)
-VALUES ('Tech Fest 2024', 'Annual technical festival', 'Festival', '2024-12-15', '10:00:00', 'Main Auditorium');
-```
-
-## Troubleshooting
-
-### "Connection failed" error
-- Check MySQL service is running
-- Verify database credentials in `config/database.php`
-- Ensure database `p` exists
-
-### File upload not working
-- Check `uploads/` directory permissions (should be 777 or writable)
-- Verify PHP `upload_max_filesize` in php.ini
-- Check `post_max_size` setting
-
-### Session issues
-- Ensure PHP sessions are enabled
-- Check session directory is writable
-- Clear browser cookies
-
-### GSAP animations not working
-- Check browser console for JavaScript errors
-- Ensure GSAP CDN is accessible
-- Verify internet connection for CDN resources
-
-## Default Features
-
-Once set up, the platform includes:
-- ✅ Student and Business registration/login
-- ✅ Job posting and applications
-- ✅ Group chat system
-- ✅ Notes sharing
-- ✅ Events calendar
-- ✅ Marketplace
-- ✅ Lost & Found
-- ✅ Complaints system
-- ✅ Points and gamification
-- ✅ Profile management
-
-## Next Steps
-
-1. Customize the design in `assets/css/style.css`
-2. Add more features as needed
-3. Configure email notifications (if needed)
-4. Set up SSL for production
-5. Add admin panel for managing content
-
-## Support
-
-For issues, check:
-- PHP error logs
-- Browser console (F12)
-- MySQL error logs
-- README.md for detailed documentation
+## Default Credentials (from Dummy Data)
+*Refer to the database or register a new user to start.*

@@ -2,13 +2,16 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Animate group cards
-    gsap.from('.group-card', {
-        duration: 0.8,
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        ease: 'power3.out'
-    });
+    // Animate group cards if they exist
+    if (document.querySelectorAll('.group-card').length > 0) {
+        gsap.from('.group-card', {
+            duration: 0.8,
+            y: 50,
+            opacity: 0,
+            stagger: 0.1,
+            ease: 'power3.out'
+        });
+    }
     
     // Join group button handlers
     const joinButtons = document.querySelectorAll('.join-group-btn');
@@ -55,7 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server output:', text);
+                    throw new Error('Server returned invalid JSON. Check console for details.');
+                }
+            }))
             .then(data => {
                 if (data.success) {
                     Swal.fire({
@@ -108,7 +118,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server output:', text);
+                    throw new Error('Server returned invalid JSON. Check console for details.');
+                }
+            }))
             .then(data => {
                 if (data.success) {
                     Swal.fire({
@@ -167,7 +184,14 @@ function joinGroup(groupId, button) {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Server output:', text);
+                    throw new Error('Server returned invalid JSON. Check console for details.');
+                }
+            }))
             .then(data => {
                 if (data.success) {
                     Swal.fire({

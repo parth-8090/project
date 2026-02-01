@@ -5,6 +5,10 @@ header('Content-Type: application/json');
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+// Debug logging
+error_log("Auth Request: Action=$action");
+error_log("POST Data: " . print_r($_POST, true));
+
 try {
     $conn = getDBConnection();
     
@@ -141,5 +145,9 @@ try {
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
     }
 } catch(PDOException $e) {
+    error_log("DB Error: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+} catch(Exception $e) {
+    error_log("General Error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'System error: ' . $e->getMessage()]);
 }

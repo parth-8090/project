@@ -229,4 +229,4 @@ require_once 'includes/header.php';
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-<script src="assets/js/groups.js"></script>
+<script src="assets/js/groups.js?v=<?php echo time(); ?>"></script>

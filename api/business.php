@@ -33,7 +33,7 @@ try {
             
             // Verify business owns this application
             $stmt = $conn->prepare("
-                SELECT a.id, a.student_id, a.job_id
+                SELECT a.id, a.student_id, a.job_id, j.number_of_employees, j.status as job_status
                 FROM applications a
                 JOIN jobs j ON a.job_id = j.id
                 WHERE a.id = ? AND j.business_id = ?
@@ -45,19 +45,27 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Application not found']);
                 exit;
             }
+
+            // CHECK OPENINGS if approving
+            if ($status === 'approved') {
+                if ($application['number_of_employees'] <= 0) {
+                    echo json_encode(['success' => false, 'message' => 'Cannot approve: No openings left for this job.']);
+                    exit;
+                }
+            }
             
             // Update application status
             $stmt = $conn->prepare("UPDATE applications SET status = ? WHERE id = ?");
             $stmt->execute([$status, $application_id]);
             
-            // If approved, award points to student (only if job matches their field)
+            // If approved, award points, REDUCE OPENINGS, and potentially AUTO-CLOSE
             if ($status === 'approved') {
                 // Get student's department
                 $stmt = $conn->prepare("SELECT department FROM students WHERE id = ?");
                 $stmt->execute([$application['student_id']]);
                 $student = $stmt->fetch();
                 
-                // Award points (you can customize this logic)
+                // Award points
                 $points_to_award = 10;
                 $stmt = $conn->prepare("UPDATE students SET points = points + ? WHERE id = ?");
                 $stmt->execute([$points_to_award, $application['student_id']]);
@@ -65,6 +73,15 @@ try {
                 // Create notification
                 $stmt = $conn->prepare("INSERT INTO notifications (student_id, type, title, message, link) VALUES (?, 'application', 'Application Approved', 'Your job application has been approved!', ?)");
                 $stmt->execute([$application['student_id'], "job_details.php?id=" . $application['job_id']]);
+
+                // REDUCE OPENINGS
+                $stmt = $conn->prepare("UPDATE jobs SET number_of_employees = number_of_employees - 1 WHERE id = ?");
+                $stmt->execute([$application['job_id']]);
+
+                // AUTO-CLOSE if 0
+                // Re-fetch to be sure or just assume previous - 1
+                $stmt = $conn->prepare("UPDATE jobs SET status = 'completed' WHERE id = ? AND number_of_employees <= 0");
+                $stmt->execute([$application['job_id']]);
             }
             
             echo json_encode(['success' => true, 'message' => 'Application updated successfully']);

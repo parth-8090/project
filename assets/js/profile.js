@@ -24,6 +24,32 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             handleUpdateProfile();
         });
+        
+        // Photo preview
+        const photoInput = document.getElementById('profilePhotoInput');
+        if (photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('photoPreview');
+                        if (preview) {
+                            preview.src = e.target.result;
+                        } else {
+                            // If user had no photo before, the img tag might not exist, we just have the div icon
+                            const div = document.getElementById('photoPreviewDiv');
+                            if (div) {
+                                div.innerHTML = `<img src="${e.target.result}" class="rounded-circle shadow-sm object-fit-cover" style="width: 80px; height: 80px;" id="photoPreview">`;
+                                div.style = ""; // clear styles or adjust as needed
+                                div.className = ""; // clear bg classes
+                            }
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     }
 });
 

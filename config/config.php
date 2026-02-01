@@ -3,19 +3,28 @@
 require_once __DIR__ . '/database.php';
 
 // Site Configuration
+// Automatically detect if running on localhost or live server
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$domain = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$path = str_contains($domain, 'localhost') ? '/project' : ''; // Adjust '/project' if your local folder name is different
+
 define('SITE_NAME', 'Agora Campus');
-define('SITE_URL', 'http://localhost');
+define('SITE_URL', $protocol . '://' . $domain . $path);
 
 // File Upload Configuration
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('NOTES_DIR', UPLOAD_DIR . 'notes/');
 define('MARKETPLACE_DIR', UPLOAD_DIR . 'marketplace/');
 define('CHAT_DIR', UPLOAD_DIR . 'chat/');
+define('PROFILE_DIR', UPLOAD_DIR . 'profiles/');
 define('MAX_FILE_SIZE', 10485760); // 10MB
 
 // Create upload directories if they don't exist
 if (!file_exists(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0777, true);
+}
+if (!file_exists(PROFILE_DIR)) {
+    mkdir(PROFILE_DIR, 0777, true);
 }
 if (!file_exists(NOTES_DIR)) {
     mkdir(NOTES_DIR, 0777, true);

@@ -91,7 +91,19 @@ function handleLogin() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Server response:', text);
+                throw new Error('Invalid JSON response from server');
+            }
+        });
+    })
     .then(data => {
         if (data.success) {
             showAlert(data.message, 'success');
@@ -105,7 +117,8 @@ function handleLogin() {
         }
     })
     .catch(error => {
-        showAlert('An error occurred. Please try again.', 'error');
+        console.error('Login Error:', error);
+        showAlert(error.message || 'An error occurred. Please try again.', 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
     });
@@ -125,7 +138,19 @@ function handleStudentRegister() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Server response:', text);
+                throw new Error('Invalid JSON response from server');
+            }
+        });
+    })
     .then(data => {
         if (data.success) {
             showAlert(data.message, 'success');
@@ -139,7 +164,8 @@ function handleStudentRegister() {
         }
     })
     .catch(error => {
-        showAlert('An error occurred. Please try again.', 'error');
+        console.error('Registration Error:', error);
+        showAlert(error.message || 'An error occurred. Please try again.', 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
     });
@@ -159,7 +185,19 @@ function handleBusinessRegister() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Server response:', text);
+                throw new Error('Invalid JSON response from server');
+            }
+        });
+    })
     .then(data => {
         if (data.success) {
             showAlert(data.message, 'success');
@@ -173,7 +211,8 @@ function handleBusinessRegister() {
         }
     })
     .catch(error => {
-        showAlert('An error occurred. Please try again.', 'error');
+        console.error('Registration Error:', error);
+        showAlert(error.message || 'An error occurred. Please try again.', 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
     });

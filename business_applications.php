@@ -122,5 +122,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/business.js"></script>
+<script src="assets/js/business.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

@@ -71,11 +71,9 @@ include 'includes/header.php';
                             <div class="d-flex <?php echo $isMe ? 'justify-content-end' : 'justify-content-start'; ?> message-item" data-message-id="<?php echo $msg['id']; ?>">
                                 <div class="card border-0 shadow-sm <?php echo $isMe ? 'bg-primary text-white' : 'bg-white'; ?>" style="max-width: 75%; border-radius: 1rem; <?php echo $isMe ? 'border-bottom-right-radius: 0.25rem;' : 'border-bottom-left-radius: 0.25rem;'; ?>">
                                     <div class="card-body p-3">
-                                        <?php if (!$isMe): ?>
-                                            <div class="fw-bold small mb-1 <?php echo $isMe ? 'text-white-50' : 'text-primary'; ?>">
+                                            <div class="fw-bold small mb-1 <?php echo $isMe ? 'text-white-50' : 'text-primary'; ?> text-end">
                                                 <?php echo htmlspecialchars($msg['full_name']); ?>
                                             </div>
-                                        <?php endif; ?>
                                         <p class="mb-1"><?php echo nl2br(htmlspecialchars($msg['message'])); ?></p>
                                         <div class="small <?php echo $isMe ? 'text-white-50' : 'text-muted'; ?> text-end" style="font-size: 0.7rem;">
                                             <?php echo formatDateTime($msg['sent_at']); ?>
@@ -132,5 +130,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/chat.js"></script>
+<script src="assets/js/chat.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

@@ -21,7 +21,7 @@ include 'includes/header.php';
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm overflow-hidden rounded-4" data-aos="fade-up">
+            <div class="card border-0 shadow-sm overflow-hidden rounded-4 bg-white" data-aos="fade-up">
                 <div class="card-body p-4 p-md-5">
                     
                     <form id="postJobForm">
@@ -110,5 +110,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/business.js"></script>
+<script src="assets/js/business.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

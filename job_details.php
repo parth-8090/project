@@ -180,5 +180,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/jobs.js"></script>
+<script src="assets/js/jobs.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

@@ -12,13 +12,44 @@ try {
         case 'update_profile':
             requireStudent();
             $student_id = $_SESSION['user_id'];
+            $full_name = sanitizeInput($_POST['full_name']);
+            $email = sanitizeInput($_POST['email']);
+            $birthdate = sanitizeInput($_POST['birthdate']);
+            
             $linkedin_link = sanitizeInput($_POST['linkedin_link'] ?? '');
             $github_link = sanitizeInput($_POST['github_link'] ?? '');
             $skills = sanitizeInput($_POST['skills'] ?? '');
             $interests = sanitizeInput($_POST['interests'] ?? '');
             
-            $stmt = $conn->prepare("UPDATE students SET linkedin_link = ?, github_link = ?, skills = ?, interests = ? WHERE id = ?");
-            $stmt->execute([$linkedin_link, $github_link, $skills, $interests, $student_id]);
+            // Handle Profile Photo Upload
+            $profile_photo = null;
+            if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+                $file = $_FILES['profile_photo'];
+                $allowed = ['image/jpeg', 'image/png', 'image/gif'];
+                
+                if (in_array($file['type'], $allowed)) {
+                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $filename = 'profile_' . $student_id . '_' . time() . '.' . $ext;
+                    $target = PROFILE_DIR . $filename;
+                    
+                    if (move_uploaded_file($file['tmp_name'], $target)) {
+                        $profile_photo = $filename;
+                    }
+                }
+            }
+            
+            // Calculate age
+            $dob = new DateTime($birthdate);
+            $now = new DateTime();
+            $age = $now->diff($dob)->y;
+            
+            if ($profile_photo) {
+                $stmt = $conn->prepare("UPDATE students SET full_name = ?, email = ?, birthdate = ?, age = ?, linkedin_link = ?, github_link = ?, skills = ?, interests = ?, profile_photo = ? WHERE id = ?");
+                $stmt->execute([$full_name, $email, $birthdate, $age, $linkedin_link, $github_link, $skills, $interests, $profile_photo, $student_id]);
+            } else {
+                $stmt = $conn->prepare("UPDATE students SET full_name = ?, email = ?, birthdate = ?, age = ?, linkedin_link = ?, github_link = ?, skills = ?, interests = ? WHERE id = ?");
+                $stmt->execute([$full_name, $email, $birthdate, $age, $linkedin_link, $github_link, $skills, $interests, $student_id]);
+            }
             
             echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
             break;

@@ -28,6 +28,9 @@ require_once 'includes/header.php';
             <p class="text-muted mb-0">Buy and sell items within the campus community.</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <button class="btn btn-outline-primary rounded-pill px-4 shadow-sm me-2" data-bs-toggle="modal" data-bs-target="#inquiriesModal" id="btnInquiries">
+                <i class="fas fa-inbox me-2"></i> Inquiries
+            </button>
             <button class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#sellItemModal">
                 <i class="fas fa-plus me-2"></i> Sell Item
             </button>
@@ -46,7 +49,9 @@ require_once 'includes/header.php';
                 </div>
             </div>
         <?php else: ?>
-            <?php foreach ($items as $index => $item): ?>
+            <?php foreach ($items as $index => $item): 
+                $is_owner = ($item['student_id'] == $_SESSION['user_id']);
+            ?>
             <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
                 <div class="card h-100 marketplace-card border-0 shadow-sm hover-lift overflow-hidden">
                     <div class="position-relative">
@@ -57,9 +62,17 @@ require_once 'includes/header.php';
                             <i class="fas fa-shopping-bag fa-3x text-secondary opacity-25"></i>
                         </div>
                         <?php endif; ?>
-                        <span class="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm rounded-pill fw-bold">
-                            <?php echo htmlspecialchars($item['category'] ?? 'General'); ?>
-                        </span>
+                        
+                        <div class="position-absolute top-0 end-0 m-3 d-flex flex-column gap-1 align-items-end">
+                            <span class="badge bg-white text-dark shadow-sm rounded-pill fw-bold">
+                                <?php echo htmlspecialchars($item['category'] ?? 'General'); ?>
+                            </span>
+                            <?php if ($is_owner): ?>
+                            <span class="badge bg-primary text-white shadow-sm rounded-pill fw-bold">
+                                <i class="fas fa-tag me-1"></i> Your Item
+                            </span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                     
                     <div class="card-body d-flex flex-column p-4">
@@ -85,9 +98,18 @@ require_once 'includes/header.php';
                             </div>
                         </div>
                         
-                        <button class="btn btn-outline-primary btn-sm w-100 rounded-pill contact-seller-btn" data-item-id="<?php echo $item['id']; ?>" data-seller-name="<?php echo htmlspecialchars($item['full_name']); ?>">
-                            <i class="fas fa-envelope me-1"></i> Contact Seller
-                        </button>
+                        <?php if ($is_owner): ?>
+                            <button class="btn btn-light btn-sm w-100 rounded-pill text-muted" disabled>
+                                <i class="fas fa-user-check me-1"></i> Listed by You
+                            </button>
+                        <?php else: ?>
+                            <button class="btn btn-outline-primary btn-sm w-100 rounded-pill contact-seller-btn" 
+                                data-item-id="<?php echo $item['id']; ?>" 
+                                data-seller-name="<?php echo htmlspecialchars($item['full_name']); ?>"
+                                data-seller-id="<?php echo $item['student_id']; ?>">
+                                <i class="fas fa-envelope me-1"></i> Contact Seller
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -96,10 +118,30 @@ require_once 'includes/header.php';
     </div>
 </div>
 
+<!-- Inquiries Modal -->
+<div class="modal fade" id="inquiriesModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg bg-white">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">My Inquiries</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-4">
+                <div id="inquiriesList" class="list-group list-group-flush">
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-inbox fa-3x mb-3 opacity-25"></i>
+                        <p>Loading inquiries...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Sell Item Modal -->
 <div class="modal fade" id="sellItemModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
+        <div class="modal-content border-0 shadow-lg bg-white">
             <div class="modal-header border-bottom-0 pb-0">
                 <h5 class="modal-title fw-bold">Sell Item</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -108,12 +150,12 @@ require_once 'includes/header.php';
                 <div class="modal-body pt-4">
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Item Title *</label>
-                        <input type="text" class="form-control bg-light border-0" name="title" required placeholder="What are you selling?">
+                        <input type="text" class="form-control border-0" name="title" required placeholder="What are you selling?">
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold small">Category</label>
-                            <select class="form-select bg-light border-0" name="category">
+                            <select class="form-select border-0" name="category">
                                 <option value="Books">Books</option>
                                 <option value="Electronics">Electronics</option>
                                 <option value="Clothing">Clothing</option>
@@ -123,16 +165,16 @@ require_once 'includes/header.php';
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold small">Price (₹) *</label>
-                            <input type="number" class="form-control bg-light border-0" name="price" step="0.01" min="0" required placeholder="0.00">
+                            <input type="number" class="form-control border-0" name="price" step="0.01" min="0" required placeholder="0.00">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Description</label>
-                        <textarea class="form-control bg-light border-0" name="description" rows="3" placeholder="Describe your item..."></textarea>
+                        <textarea class="form-control border-0" name="description" rows="3" placeholder="Describe your item..."></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Image (Optional)</label>
-                        <input type="file" class="form-control bg-light border-0" name="image" accept="image/*">
+                        <input type="file" class="form-control border-0" name="image" accept="image/*">
                     </div>
                 </div>
                 <div class="modal-footer border-top-0 pt-0 pb-4">
@@ -145,4 +187,4 @@ require_once 'includes/header.php';
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-<script src="assets/js/marketplace.js"></script>
+<script src="assets/js/marketplace.js?v=<?php echo time(); ?>"></script>

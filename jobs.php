@@ -57,51 +57,55 @@ require_once 'includes/header.php';
         <?php else: ?>
             <?php foreach ($jobs as $index => $job): ?>
                 <div class="col-md-6 col-lg-4 job-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
-                    <div class="card h-100 job-card hover-lift border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="rounded-circle bg-primary-subtle text-primary p-3 d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                        <i class="fas fa-building fa-lg"></i>
+                    <article class="job-card">
+                        <div class="job-card-body">
+                            <header class="job-header">
+                                <div class="job-company-info">
+                                    <div class="job-logo">
+                                        <i class="fas fa-building"></i>
                                     </div>
-                                    <div>
-                                        <h5 class="card-title fw-bold mb-1 text-truncate" style="max-width: 150px;" title="<?php echo htmlspecialchars($job['title']); ?>">
+                                    <div class="job-title-group">
+                                        <h2 class="job-title" title="<?php echo htmlspecialchars($job['title']); ?>">
                                             <?php echo htmlspecialchars($job['title']); ?>
-                                        </h5>
-                                        <div class="text-muted small text-truncate" style="max-width: 150px;">
+                                        </h2>
+                                        <div class="job-company">
                                             <?php echo htmlspecialchars($job['business_name']); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+                                <span class="job-type-badge">
                                     <?php echo ucfirst(htmlspecialchars($job['job_type'])); ?>
                                 </span>
+                            </header>
+                            
+                            <div class="job-meta-tags">
+                                <span class="job-tag">
+                                    <i class="fas fa-map-marker-alt"></i><?php echo htmlspecialchars($job['location'] ?? 'On Campus'); ?>
+                                </span>
+                                <span class="job-tag tag-salary">
+                                    <i class="fas fa-money-bill-wave"></i><?php echo htmlspecialchars($job['salary'] ?? 'Negotiable'); ?>
+                                </span>
+                                <?php if ($job['number_of_employees'] > 0): ?>
+                                    <span class="job-tag tag-openings">
+                                        <i class="fas fa-users"></i>Openings: <?php echo $job['number_of_employees']; ?>
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             
-                            <div class="mb-4">
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">
-                                        <i class="fas fa-map-marker-alt me-2 text-primary"></i><?php echo htmlspecialchars($job['location'] ?? 'On Campus'); ?>
-                                    </span>
-                                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">
-                                        <i class="fas fa-money-bill-wave me-2 text-success"></i><?php echo htmlspecialchars($job['salary'] ?? 'Negotiable'); ?>
-                                    </span>
-                                </div>
-                                <p class="card-text text-muted small line-clamp-3">
-                                    <?php echo substr(htmlspecialchars($job['description']), 0, 150) . (strlen($job['description']) > 150 ? '...' : ''); ?>
-                                </p>
-                            </div>
+                            <p class="job-description">
+                                <?php echo substr(htmlspecialchars($job['description']), 0, 150) . (strlen($job['description']) > 150 ? '...' : ''); ?>
+                            </p>
                             
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-light">
-                                <small class="text-muted">
+                            <footer class="job-footer">
+                                <small class="job-posted-date">
                                     <i class="far fa-clock me-1"></i> <?php echo date('M d', strtotime($job['posted_at'])); ?>
                                 </small>
-                                <a href="job_details.php?id=<?php echo $job['id']; ?>" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold">
+                                <a href="job_details.php?id=<?php echo $job['id']; ?>" class="btn btn-primary job-action-btn">
                                     View Details
                                 </a>
-                            </div>
+                            </footer>
                         </div>
-                    </div>
+                    </article>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -109,4 +113,4 @@ require_once 'includes/header.php';
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-<script src="assets/js/jobs.js"></script>
+<script src="assets/js/jobs.js?v=<?php echo time(); ?>"></script>
