@@ -20,6 +20,8 @@ $jobs = $stmt->fetchAll();
 $student_dept = $_SESSION['department'];
 
 $page_title = "Jobs";
+$page_description = "Find campus jobs, internships, and part-time opportunities students. Apply directly through Agora Campus.";
+$page_keywords = "student jobs, campus internships, part-time jobs, university career, student employment";
 require_once 'includes/header.php';
 ?>
 

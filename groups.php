@@ -34,6 +34,8 @@ $stmt->execute([$student_id]);
 $my_groups = $stmt->fetchAll();
 
 $page_title = "Groups";
+$page_description = "Join student groups, clubs, and study circles. Collaborate with peers who share your interests.";
+$page_keywords = "student groups, college clubs, study circles, peer collaboration, campus community";
 require_once 'includes/header.php';
 ?>
 

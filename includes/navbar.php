@@ -1,12 +1,14 @@
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
         <?php if (isBusiness()): ?>
-        <a class="navbar-brand" href="business_dashboard.php">
-            <i class="fas fa-building text-primary me-2"></i>Agora Campus
+        <a class="navbar-brand d-flex align-items-center gap-2" href="business_dashboard.php">
+            <img src="assets/img/logo.svg" alt="Agora Campus" width="32" height="32" class="d-inline-block align-text-top">
+            <span>Agora Campus</span>
         </a>
         <?php else: ?>
-        <a class="navbar-brand" href="dashboard.php">
-            <i class="fas fa-graduation-cap text-primary me-2"></i>Agora Campus
+        <a class="navbar-brand d-flex align-items-center gap-2" href="dashboard.php">
+            <img src="assets/img/logo.svg" alt="Agora Campus" width="32" height="32" class="d-inline-block align-text-top">
+            <span>Agora Campus</span>
         </a>
         <?php endif; ?>
         

@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? $page_title . ' - ' . (defined('SITE_NAME') ? SITE_NAME : 'Agora Campus') : (defined('SITE_NAME') ? SITE_NAME : 'Agora Campus'); ?></title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'Agora Campus is the all-in-one platform for students to manage academic life, join groups, find jobs, and trade items.'; ?>">
+    <meta name="keywords" content="<?php echo isset($page_keywords) ? htmlspecialchars($page_keywords) : 'student portal, college groups, campus marketplace, student jobs, university events'; ?>">
+    <meta name="author" content="Agora Campus">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="<?php echo isset($page_title) ? htmlspecialchars($page_title) : 'Agora Campus'; ?>">
+    <meta property="og:description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'Connect, collaborate, and thrive with Agora Campus.'; ?>">
+    <meta property="og:image" content="assets/img/logo.svg">
+    <meta property="og:url" content="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+    
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     

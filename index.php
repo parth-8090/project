@@ -5,6 +5,8 @@ if (isLoggedIn()) {
     exit;
 }
 $page_title = "Welcome";
+$page_description = "Agora Campus is your ultimate student community platform. Connect with peers, find jobs, join study groups, and trade items effortlessly.";
+$page_keywords = "student community, campus jobs, study groups, college marketplace, student networking";
 require_once 'includes/header.php';
 ?>
 

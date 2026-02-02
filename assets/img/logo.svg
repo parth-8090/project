@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimal Pillar -->
+  <path d="M60 160H140" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M70 140V80" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M100 140V80" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M130 140V80" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M50 80H150" stroke="#6366f1" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Graduation Cap stylized as roof -->
+  <path d="M100 20L160 50L100 80L40 50L100 20Z" fill="#6366f1" stroke="#6366f1" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M160 50V70" stroke="#6366f1" stroke-width="4"/>
+  <circle cx="160" cy="75" r="5" fill="#6366f1"/>
+</svg>

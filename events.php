@@ -15,6 +15,8 @@ $stmt->execute();
 $past_events = $stmt->fetchAll();
 
 $page_title = "Events";
+$page_description = "Discover upcoming college events, workshops, seminars, and social gatherings. Never miss out on campus activities.";
+$page_keywords = "college events, student workshops, campus activities, seminars, social gatherings";
 require_once 'includes/header.php';
 ?>
 

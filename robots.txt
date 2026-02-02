@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /config/
+Disallow: /includes/
+Disallow: /api/
+Disallow: /assets/
+
+Sitemap: https://agora-campus.page.gd/sitemap.xml
