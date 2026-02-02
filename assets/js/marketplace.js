@@ -1,17 +1,41 @@
 // Marketplace JavaScript with GSAP animations
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Animate marketplace cards if they exist
-    if (document.querySelectorAll('.marketplace-card').length > 0) {
-        gsap.from('.marketplace-card', {
-            duration: 0.6,
-            y: 50,
-            opacity: 0,
-            stagger: 0.05,
-            ease: 'power3.out'
-        });
-    }
+    // Animate marketplace cards - GSAP removed to avoid conflict with AOS
+    // if (document.querySelectorAll('.marketplace-card').length > 0) {
+    //     gsap.from('.marketplace-card', {
+    //         duration: 0.6,
+    //         y: 50,
+    //         opacity: 0,
+    //         stagger: 0.05,
+    //         ease: 'power3.out'
+    //     });
+    // }
     
+    // Check for highlight param
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightId = urlParams.get('highlight');
+    if (highlightId) {
+        const itemElement = document.getElementById('item-' + highlightId);
+        if (itemElement) {
+            setTimeout(() => {
+                itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const card = itemElement.querySelector('.card');
+                if (card) {
+                    card.style.transition = 'all 0.5s ease';
+                    const originalShadow = card.style.boxShadow;
+                    card.style.boxShadow = '0 0 0 4px rgba(99, 102, 241, 0.5), 0 1rem 3rem rgba(0,0,0,.175)';
+                    card.style.transform = 'translateY(-5px)';
+                    
+                    setTimeout(() => {
+                        card.style.boxShadow = originalShadow;
+                        card.style.transform = '';
+                    }, 3000);
+                }
+            }, 800); // Wait for AOS
+        }
+    }
+
     // Sell item form
     const sellForm = document.getElementById('sellItemForm');
     if (sellForm) {
@@ -41,12 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Event delegation for dynamic contact buttons
+    // Event delegation for dynamic buttons
     document.addEventListener('click', function(e) {
         if (e.target.closest('.contact-seller-btn')) {
             const btn = e.target.closest('.contact-seller-btn');
             const itemId = btn.dataset.itemId;
+            const sellerName = btn.dataset.sellerName;
             contactSeller(itemId, sellerName);
+        }
+        
+        if (e.target.closest('.mark-sold-btn')) {
+            const btn = e.target.closest('.mark-sold-btn');
+            const itemId = btn.dataset.itemId;
+            markAsSold(itemId);
         }
     });
 
@@ -241,5 +272,39 @@ function loadInquiries() {
     });
 }
 
-// Removed legacy showNotification function in favor of SweetAlert2
+function markAsSold(itemId) {
+    Swal.fire({
+        title: 'Mark as Sold?',
+        text: "This item will be removed from the marketplace listing.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, Mark as Sold'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('action', 'mark_as_sold');
+            formData.append('item_id', itemId);
+
+            fetch('api/marketplace.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Sold!', data.message, 'success')
+                    .then(() => window.location.reload());
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                Swal.fire('Error', 'An error occurred.', 'error');
+            });
+        }
+    });
+}
 

@@ -57,9 +57,9 @@ require_once 'includes/header.php';
             </div>
         <?php else: ?>
             <?php foreach ($upcoming_events as $index => $event): ?>
-            <div class="col-md-6 col-lg-4 event-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
+            <div class="col-6 col-md-6 col-lg-4 event-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
                 <div class="card h-100 event-card border-0 shadow-sm hover-lift overflow-hidden">
-                    <div class="card-body p-4 d-flex flex-column">
+                    <div class="card-body p-4 d-flex flex-column h-100">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <span class="badge bg-primary-subtle text-primary rounded-pill">
                                 <?php echo htmlspecialchars($event['event_type'] ?? 'General'); ?>
@@ -116,7 +116,7 @@ require_once 'includes/header.php';
     
     <div class="row g-4 opacity-75">
         <?php foreach ($past_events as $index => $event): ?>
-        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
+        <div class="col-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
             <div class="card h-100 border-0 shadow-sm bg-light">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-2">

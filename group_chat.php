@@ -7,10 +7,18 @@ $conn = getDBConnection();
 $student_id = $_SESSION['user_id'];
 
 // Verify student is member of group
-$stmt = $conn->prepare("SELECT id FROM group_members WHERE group_id = ? AND student_id = ?");
+// Verify student is member of group
+$stmt = $conn->prepare("SELECT id, status FROM group_members WHERE group_id = ? AND student_id = ?");
 $stmt->execute([$group_id, $student_id]);
-if (!$stmt->fetch()) {
-    header('Location: groups.php');
+$member = $stmt->fetch();
+
+if (!$member) {
+    header('Location: groups.php?error=not_member');
+    exit;
+}
+
+if ($member['status'] == 'pending') {
+    header('Location: groups.php?error=pending');
     exit;
 }
 
@@ -54,9 +62,14 @@ include 'includes/header.php';
                         </div>
                     </div>
                     <div class="d-flex gap-2">
+                        <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#membersModal">
+                            <i class="fas fa-users me-1"></i> Members
+                        </button>
+                        <?php if ($group['created_by'] == $student_id): ?>
                         <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMemberModal">
                             <i class="fas fa-user-plus me-1"></i> Add Member
                         </button>
+                        <?php endif; ?>
                         <a href="groups.php" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-left me-1"></i> Back
                         </a>
@@ -125,6 +138,28 @@ include 'includes/header.php';
                     </div>
                     <button type="submit" class="btn btn-primary w-100 rounded-pill">Add Member</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Members List Modal -->
+<div class="modal fade" id="membersModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Group Members</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="membersList" class="list-group list-group-flush">
+                    <!-- Members will be loaded here via JS -->
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

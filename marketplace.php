@@ -52,15 +52,23 @@ require_once 'includes/header.php';
             <?php foreach ($items as $index => $item): 
                 $is_owner = ($item['student_id'] == $_SESSION['user_id']);
             ?>
-            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
+            <div class="col-6 col-md-6 col-lg-3 property-card" id="item-<?php echo $item['id']; ?>" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
                 <div class="card h-100 marketplace-card border-0 shadow-sm hover-lift overflow-hidden">
                     <div class="position-relative">
-                        <?php if ($item['image_path']): ?>
-                        <img src="<?php echo htmlspecialchars($item['image_path']); ?>" class="card-img-top marketplace-img" alt="<?php echo htmlspecialchars($item['title']); ?>">
+                        <?php if (!empty($item['image_path'])): ?>
+                            <img src="<?php echo htmlspecialchars($item['image_path']); ?>" 
+                                 class="card-img-top marketplace-img" 
+                                 alt="<?php echo htmlspecialchars($item['title']); ?>" 
+                                 style="height: 200px; object-fit: cover; width: 100%;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
+                            <!-- Fallback Placeholder (Hidden by default) -->
+                            <div class="card-img-top d-none d-flex align-items-center justify-content-center bg-light" style="height: 200px; width: 100%;">
+                                <i class="fas fa-shopping-bag fa-3x text-secondary opacity-25"></i>
+                            </div>
                         <?php else: ?>
-                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                            <i class="fas fa-shopping-bag fa-3x text-secondary opacity-25"></i>
-                        </div>
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px; width: 100%;">
+                                <i class="fas fa-shopping-bag fa-3x text-secondary opacity-25"></i>
+                            </div>
                         <?php endif; ?>
                         
                         <div class="position-absolute top-0 end-0 m-3 d-flex flex-column gap-1 align-items-end">
@@ -99,8 +107,9 @@ require_once 'includes/header.php';
                         </div>
                         
                         <?php if ($is_owner): ?>
-                            <button class="btn btn-light btn-sm w-100 rounded-pill text-muted" disabled>
-                                <i class="fas fa-user-check me-1"></i> Listed by You
+                            <button class="btn btn-outline-success btn-sm w-100 rounded-pill mark-sold-btn" 
+                                data-item-id="<?php echo $item['id']; ?>">
+                                <i class="fas fa-check-circle me-1"></i> Mark as Sold
                             </button>
                         <?php else: ?>
                             <button class="btn btn-outline-primary btn-sm w-100 rounded-pill contact-seller-btn" 
@@ -173,8 +182,8 @@ require_once 'includes/header.php';
                         <textarea class="form-control border-0" name="description" rows="3" placeholder="Describe your item..."></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Image (Optional)</label>
-                        <input type="file" class="form-control border-0" name="image" accept="image/*">
+                        <label class="form-label fw-semibold small">Item Image *</label>
+                        <input type="file" class="form-control border-0" name="image" accept="image/*" required>
                     </div>
                 </div>
                 <div class="modal-footer border-top-0 pt-0 pb-4">

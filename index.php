@@ -68,7 +68,7 @@ require_once 'includes/header.php';
         
         <div class="row g-4">
             <!-- Jobs -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-briefcase"></i>
@@ -79,7 +79,7 @@ require_once 'includes/header.php';
             </div>
             
             <!-- Community -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
@@ -90,7 +90,7 @@ require_once 'includes/header.php';
             </div>
             
             <!-- Marketplace -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-store"></i>
@@ -101,7 +101,7 @@ require_once 'includes/header.php';
             </div>
             
             <!-- Notes -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="400">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-book"></i>
@@ -112,7 +112,7 @@ require_once 'includes/header.php';
             </div>
             
             <!-- Events -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="500">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-alt"></i>
@@ -123,7 +123,7 @@ require_once 'includes/header.php';
             </div>
             
             <!-- Lost & Found -->
-            <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="600">
                 <div class="feature-box h-100">
                     <div class="feature-icon">
                         <i class="fas fa-search"></i>

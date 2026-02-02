@@ -50,7 +50,7 @@ require_once 'includes/header.php';
     
     <!-- Stats Cards -->
     <div class="row g-4 mb-5">
-        <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
             <div class="stat-card h-100">
                 <div class="stat-icon bg-primary-subtle text-primary">
                     <i class="fas fa-briefcase"></i>
@@ -62,7 +62,7 @@ require_once 'includes/header.php';
             </div>
         </div>
         
-        <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
             <div class="stat-card h-100">
                 <div class="stat-icon bg-success-subtle text-success">
                     <i class="fas fa-users"></i>
@@ -74,7 +74,7 @@ require_once 'includes/header.php';
             </div>
         </div>
         
-        <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
             <div class="stat-card h-100">
                 <div class="stat-icon bg-warning-subtle text-warning">
                     <i class="fas fa-star"></i>
@@ -86,7 +86,7 @@ require_once 'includes/header.php';
             </div>
         </div>
         
-        <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="400">
             <div class="stat-card h-100">
                 <div class="stat-icon bg-danger-subtle text-danger">
                     <i class="fas fa-bell"></i>
@@ -104,7 +104,7 @@ require_once 'includes/header.php';
         <div class="col-lg-8">
             <h4 class="mb-4 fw-bold" data-aos="fade-right">Quick Access</h4>
             <div class="row g-4">
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="100">
                     <a href="jobs.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-briefcase fa-2x text-primary"></i>
@@ -112,7 +112,7 @@ require_once 'includes/header.php';
                         <h6 class="fw-bold text-body">Jobs</h6>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="150">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="150">
                     <a href="groups.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-users fa-2x text-success"></i>
@@ -120,7 +120,7 @@ require_once 'includes/header.php';
                         <h6 class="fw-bold text-body">Groups</h6>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="200">
                     <a href="marketplace.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-store fa-2x text-info"></i>
@@ -128,7 +128,7 @@ require_once 'includes/header.php';
                         <h6 class="fw-bold text-body">Marketplace</h6>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="250">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="250">
                     <a href="events.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-calendar-alt fa-2x text-warning"></i>
@@ -136,7 +136,7 @@ require_once 'includes/header.php';
                         <h6 class="fw-bold text-body">Events</h6>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="300">
                     <a href="notes.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-book fa-2x text-danger"></i>
@@ -144,7 +144,7 @@ require_once 'includes/header.php';
                         <h6 class="fw-bold text-body">Notes</h6>
                     </a>
                 </div>
-                <div class="col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="350">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="350">
                     <a href="lost_found.php" class="card h-100 text-center p-4 text-decoration-none hover-lift">
                         <div class="mb-3">
                             <i class="fas fa-search fa-2x text-secondary"></i>

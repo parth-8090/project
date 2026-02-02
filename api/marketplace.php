@@ -20,9 +20,14 @@ try {
             
             $image_path = null;
             
-            // Handle image upload
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $file = $_FILES['image'];
+            // Handle image upload (Required)
+            if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                echo json_encode(['success' => false, 'message' => 'Item image is required']);
+                exit;
+            }
+
+            $file = $_FILES['image'];
+            if (isset($file) && $file['error'] === UPLOAD_ERR_OK) {
                 $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
                 
                 if (in_array($file['type'], $allowed_types)) {
@@ -60,10 +65,52 @@ try {
                  exit;
             }
 
+            // Get sender details
+            $stmt = $conn->prepare("SELECT full_name FROM students WHERE id = ?");
+            $stmt->execute([$sender_id]);
+            $sender = $stmt->fetch();
+            $sender_name = $sender['full_name'] ?? 'A Student';
+
+            // Get item details
+            $stmt = $conn->prepare("SELECT title FROM marketplace_items WHERE id = ?");
+            $stmt->execute([$item_id]);
+            $item_details = $stmt->fetch();
+            $item_title = $item_details['title'] ?? 'Item';
+
             $stmt = $conn->prepare("INSERT INTO marketplace_inquiries (item_id, sender_id, receiver_id, message) VALUES (?, ?, ?, ?)");
             $stmt->execute([$item_id, $sender_id, $receiver_id, $message]);
 
+            // Create notification for the seller
+            $notif_title = "New Inquiry: " . $item_title;
+            $notif_message = $sender_name . " sent you an inquiry.";
+            $notif_link = "marketplace.php?highlight=" . $item_id;
+            
+            $stmt = $conn->prepare("INSERT INTO notifications (student_id, title, message, link, type) VALUES (?, ?, ?, ?, 'marketplace')");
+            $stmt->execute([$receiver_id, $notif_title, $notif_message, $notif_link]);
+
             echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
+            break;
+
+        case 'mark_as_sold':
+            requireStudent();
+            $student_id = $_SESSION['user_id'];
+            $item_id = intval($_POST['item_id']);
+
+            // Verify ownership
+            $stmt = $conn->prepare("SELECT student_id FROM marketplace_items WHERE id = ?");
+            $stmt->execute([$item_id]);
+            $item = $stmt->fetch();
+
+            if (!$item || $item['student_id'] != $student_id) {
+                echo json_encode(['success' => false, 'message' => 'Unauthorized action']);
+                exit;
+            }
+
+            // Update status
+            $stmt = $conn->prepare("UPDATE marketplace_items SET status = 'sold' WHERE id = ?");
+            $stmt->execute([$item_id]);
+
+            echo json_encode(['success' => true, 'message' => 'Item marked as sold']);
             break;
 
         case 'get_inquiries':

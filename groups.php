@@ -8,21 +8,24 @@ $department = $_SESSION['department'];
 
 // Get all groups
 $stmt = $conn->prepare("
-    SELECT g.*, 
+    SELECT g.*, s.full_name as creator_name,
            (SELECT COUNT(*) FROM group_members WHERE group_id = g.id) as member_count,
+           (SELECT status FROM group_members WHERE group_id = g.id AND student_id = ?) as member_status,
            (SELECT COUNT(*) FROM group_members WHERE group_id = g.id AND student_id = ?) as is_member
     FROM groups g
+    LEFT JOIN students s ON g.created_by = s.id
     ORDER BY g.created_at DESC
 ");
-$stmt->execute([$student_id]);
+$stmt->execute([$student_id, $student_id]);
 $groups = $stmt->fetchAll();
 
 // Get student's groups
 $stmt = $conn->prepare("
-    SELECT g.*, 
+    SELECT g.*, s.full_name as creator_name,
            (SELECT COUNT(*) FROM group_members WHERE group_id = g.id) as member_count
     FROM groups g
     JOIN group_members gm ON g.id = gm.group_id
+    LEFT JOIN students s ON g.created_by = s.id
     WHERE gm.student_id = ?
     ORDER BY g.created_at DESC
 ");
@@ -69,10 +72,14 @@ require_once 'includes/header.php';
                     <h4 class="card-title h5 fw-bold mb-2 text-center"><?php echo htmlspecialchars($group['group_name']); ?></h4>
                     
                     <?php if ($group['department']): ?>
-                    <p class="text-center text-primary small fw-semibold mb-3">
+                    <p class="text-center text-primary small fw-semibold mb-2">
                         <i class="fas fa-building me-1"></i> <?php echo htmlspecialchars($group['department']); ?>
                     </p>
                     <?php endif; ?>
+
+                    <p class="text-center text-muted small fw-medium mb-3">
+                        <i class="fas fa-crown me-1 text-warning"></i> Admin: <?php echo htmlspecialchars($group['creator_name']); ?>
+                    </p>
                     
                     <?php if ($group['description']): ?>
                     <p class="card-text text-muted small mb-4 text-center line-clamp-2">
@@ -129,18 +136,22 @@ require_once 'includes/header.php';
             <?php if ($group['is_member'] == 0): // Only show groups not joined in this section ?>
             <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
                 <div class="card h-100 group-card border-0 shadow-sm">
-                    <div class="group-card-header" style="background: linear-gradient(135deg, #a5b4fc, #6366f1);"></div>
-                    <div class="group-card-avatar">
+                    <div class="group-card-header" style="height: 100px; background: linear-gradient(135deg, #a5b4fc, #6366f1); opacity: 1;"></div>
+                    <div class="group-card-avatar shadow position-absolute bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; top: 70px; left: 25px; font-size: 1.5rem; color: #6366f1;">
                         <i class="fas fa-layer-group"></i>
                     </div>
                     <div class="card-body pt-5 mt-3">
                         <h4 class="card-title h5 fw-bold mb-2 text-center"><?php echo htmlspecialchars($group['group_name']); ?></h4>
                         
                         <?php if ($group['department']): ?>
-                        <p class="text-center text-primary small fw-semibold mb-3">
+                        <p class="text-center text-primary small fw-semibold mb-2">
                             <i class="fas fa-building me-1"></i> <?php echo htmlspecialchars($group['department']); ?>
                         </p>
                         <?php endif; ?>
+
+                        <p class="text-center text-muted small fw-medium mb-3">
+                            <i class="fas fa-crown me-1 text-warning"></i> Admin: <?php echo htmlspecialchars($group['creator_name']); ?>
+                        </p>
                         
                         <?php if ($group['description']): ?>
                         <p class="card-text text-muted small mb-4 text-center line-clamp-2">
@@ -152,9 +163,15 @@ require_once 'includes/header.php';
                             <span class="small text-muted fw-medium">
                                 <i class="fas fa-user-friends me-1 text-info"></i> <?php echo $group['member_count']; ?> Members
                             </span>
-                            <button class="btn btn-outline-primary btn-sm rounded-pill px-3 join-group-btn" data-group-id="<?php echo $group['id']; ?>">
-                                <i class="fas fa-plus me-1"></i> Join
-                            </button>
+                            <?php if ($group['member_status'] == 'pending'): ?>
+                                <button class="btn btn-outline-warning btn-sm rounded-pill px-3" disabled>
+                                    <i class="fas fa-clock me-1"></i> Pending
+                                </button>
+                            <?php else: ?>
+                                <button class="btn btn-outline-primary btn-sm rounded-pill px-3 join-group-btn" data-group-id="<?php echo $group['id']; ?>">
+                                    <i class="fas fa-paper-plane me-1"></i> Request to Join
+                                </button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -227,6 +244,34 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+
+    if (error === 'not_member') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Access Denied',
+            text: 'You are not a member of this group.',
+            confirmButtonColor: '#d33'
+        });
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (error === 'pending') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Request Pending',
+            text: 'Your request to join this group is pending admin approval.',
+            confirmButtonColor: '#3085d6'
+        });
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+</script>
 
 <?php require_once 'includes/footer.php'; ?>
 <script src="assets/js/groups.js?v=<?php echo time(); ?>"></script>

@@ -57,8 +57,8 @@ require_once 'includes/header.php';
         <?php else: ?>
             <?php foreach ($jobs as $index => $job): ?>
                 <div class="col-md-6 col-lg-4 job-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 50; ?>">
-                    <article class="job-card">
-                        <div class="job-card-body">
+                    <article class="job-card h-100">
+                        <div class="job-card-body d-flex flex-column h-100">
                             <header class="job-header">
                                 <div class="job-company-info">
                                     <div class="job-logo">

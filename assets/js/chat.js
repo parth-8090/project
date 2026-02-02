@@ -128,7 +128,220 @@ document.addEventListener('DOMContentLoaded', function() {
     if (groupId) {
         startPolling(groupId);
     }
+
+
+    // Members Modal
+    const membersModal = document.getElementById('membersModal');
+    if (membersModal) {
+        membersModal.addEventListener('show.bs.modal', function () {
+            loadMembers();
+        });
+    }
 });
+
+function loadMembers() {
+    const listContainer = document.getElementById('membersList');
+    const groupIdInput = document.querySelector('input[name="group_id"]');
+    
+    if (!groupIdInput) return;
+    const groupId = groupIdInput.value;
+    
+    // Show loading
+    listContainer.innerHTML = `
+        <div class="text-center p-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    
+    fetch(`api/groups.php?action=get_members&group_id=${groupId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.members.length === 0) {
+                    listContainer.innerHTML = '<div class="p-3 text-center text-muted">No members found</div>';
+                    return;
+                }
+                
+                let html = '';
+                data.members.forEach(member => {
+                    // Check if current user is admin to decide if we show remove button
+                    const imAdmin = !!document.querySelector('#addMemberModal'); // This button is conditionally rendered in PHP
+                    
+                    let actionButtons = '';
+                    let statusBadge = '';
+
+                    if (member.status === 'pending') {
+                        statusBadge = '<span class="badge bg-warning text-dark ms-1" style="font-size: 0.6rem;">Pending</span>';
+                        if (imAdmin) {
+                            actionButtons = `
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-success btn-sm rounded-pill px-3" 
+                                        onclick="approveRequest(${member.id}, '${escapeHtml(member.full_name)}')"
+                                        title="Approve Request">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3" 
+                                        onclick="rejectRequest(${member.id}, '${escapeHtml(member.full_name)}')"
+                                        title="Reject Request">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        if (member.is_admin == 1) {
+                            statusBadge = '<span class="badge bg-primary ms-1" style="font-size: 0.6rem;">Admin</span>';
+                        }
+                        if (imAdmin && member.is_admin == 0) {
+                            actionButtons = `
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3 remove-member-btn" 
+                                    onclick="removeMember(${member.id}, '${escapeHtml(member.full_name)}')"
+                                    title="Remove Member">
+                                    <i class="fas fa-user-minus"></i>
+                                </button>
+                            `;
+                        }
+                    }
+                    
+                    html += `
+                        <div class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    ${member.profile_photo ? `<img src="${member.profile_photo}" class="rounded-circle w-100 h-100 object-fit-cover">` : '<i class="fas fa-user text-secondary"></i>'}
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">${escapeHtml(member.full_name)} ${statusBadge}</h6>
+                                    <small class="text-muted">${escapeHtml(member.enrollment_no)}</small>
+                                </div>
+                            </div>
+                            
+                            ${actionButtons}
+                        </div>
+                    `;
+                });
+                
+                listContainer.innerHTML = html;
+            } else {
+                listContainer.innerHTML = `<div class="p-3 text-center text-danger">${data.message}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            listContainer.innerHTML = '<div class="p-3 text-center text-danger">Failed to load members</div>';
+        });
+}
+
+function approveRequest(memberId, memberName) {
+    handleRequestAction('approve_request', memberId, memberName, 'Approve', 'Approved');
+}
+
+function rejectRequest(memberId, memberName) {
+    handleRequestAction('reject_request', memberId, memberName, 'Reject', 'Rejected');
+}
+
+function handleRequestAction(action, memberId, memberName, actionVerb, actionPast) {
+    const groupIdInput = document.querySelector('input[name="group_id"]');
+    if (!groupIdInput) return;
+    const groupId = groupIdInput.value;
+
+    Swal.fire({
+        title: `${actionVerb} Request?`,
+        text: `Are you sure you want to ${actionVerb.toLowerCase()} ${memberName}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: actionVerb === 'Reject' ? '#d33' : '#3085d6',
+        confirmButtonText: `Yes, ${actionVerb}`,
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('group_id', groupId);
+            formData.append('student_id', memberId);
+            
+            fetch('api/groups.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        actionPast,
+                        data.message,
+                        'success'
+                    );
+                    loadMembers(); // Refresh list
+                } else {
+                    Swal.fire(
+                        'Error',
+                        data.message,
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+}
+
+function removeMember(memberId, memberName) {
+    const groupIdInput = document.querySelector('input[name="group_id"]');
+    if (!groupIdInput) return;
+    const groupId = groupIdInput.value;
+
+    Swal.fire({
+        title: 'Remove Member?',
+        text: `Are you sure you want to remove ${memberName} from the group?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, remove',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('action', 'remove_member');
+            formData.append('group_id', groupId);
+            formData.append('student_id', memberId);
+            
+            fetch('api/groups.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Removed!',
+                        'Member has been removed.',
+                        'success'
+                    );
+                    loadMembers(); // Refresh list
+                } else {
+                    Swal.fire(
+                        'Error',
+                        data.message,
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error',
+                    'Failed to remove member.',
+                    'error'
+                );
+            });
+        }
+    });
+}
 
 function clearAttachment() {
     const attachmentInput = document.getElementById('attachmentInput');
